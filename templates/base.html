@@ -6,9 +6,9 @@
   <body>
     <div>
       <h1>Internetowa Liga PSG</h1>
-      <a href="/index">Landing</a>
-      <a href="/news">News</a>
-      <a href="/login">Zaloguj się</a>
+      <a href="{{ url_for('index') }}">Landing</a>
+      <a href="{{ url_for('news') }}">News</a>
+      <a href="{{ url_for('login') }}">Zaloguj się</a>
       <hr>
       
       {% with messages = get_flashed_messages() %}
