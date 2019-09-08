@@ -8,8 +8,19 @@
       <h1>Internetowa Liga PSG</h1>
       <a href="/index">Landing</a>
       <a href="/news">News</a>
+      <a href="/login">Zaloguj się</a>
       <hr>
       
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+
       {% block content %}{% endblock %}
 
   </body>
