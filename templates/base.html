@@ -8,7 +8,11 @@
       <h1>Internetowa Liga PSG</h1>
       <a href="{{ url_for('index') }}">Landing</a>
       <a href="{{ url_for('news') }}">News</a>
+      {% if current_user.is_anonymous %}
       <a href="{{ url_for('login') }}">Zaloguj się</a>
+      {% else %}
+      <a href="{{ url_for('logout') }}">Wyloguj się</a>
+      {% endif %}
       <hr>
       
       {% with messages = get_flashed_messages() %}
