@@ -1,5 +1,7 @@
-from flask import render_template, flash, redirect, url_for
-from flask_login import current_user, login_user, logout_user
+from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user, login_user, logout_user, login_required
+from werkzeug.urls import url_parse
+
 from app import app
 from app.models import User
 from forms.login_form import LoginForm
@@ -8,9 +10,12 @@ from forms.login_form import LoginForm
 @app.route('/index')
 def index():
     user = {'username': 'world'}
+    if current_user.is_authenticated:
+        user = current_user
     return render_template('index.html', title='Landing', user=user)
 
 @app.route('/news')
+@login_required
 def news():
     posts = [
         {
@@ -38,7 +43,11 @@ def login():
             return redirect(url_for('login'))
 
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
+
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
 
     return render_template('login.html', title='Logowanie', form=form)
 
