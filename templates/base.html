@@ -12,6 +12,7 @@
       <a href="{{ url_for('login') }}">Zaloguj się</a>
       <a href="{{ url_for('register') }}">Zarejestruj się</a>
       {% else %}
+      <a href="{{ url_for('user', username=current_user.username) }}">Profil</a>
       <a href="{{ url_for('logout') }}">Wyloguj się</a>
       {% endif %}
       <hr>
