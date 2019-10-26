@@ -14,8 +14,15 @@
         </td>
       </tr>
   </table>
+
   <hr>
   {% for post in posts %}
     {% include "_post.html" %}
+  {% endfor %}
+
+  <hr>
+  <h3>Mecze rozegrane w lidze:</h3>
+  {% for match in matches %}
+    {% include "_match.html" %}
   {% endfor %}
 {% endblock %}

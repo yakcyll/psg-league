@@ -83,7 +83,8 @@ def user(id):
         {'author': user, 'body': 'Test post #1'},
         {'author': user, 'body': 'Test post #2'},
     ]
-    return render_template('user.html', user=user, posts=posts)
+    matches = Match.query.filter_by(black_player_id=id).union(Match.query.filter_by(white_player_id=id)).all()
+    return render_template('user.html', user=user, posts=posts, matches=matches)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -132,7 +133,6 @@ def add_match():
 @app.route('/match/<id>')
 def view_match(id):
     match = Match.query.filter_by(id=id).first_or_404()
-    print(match)
     title = 'Mecz ' + match.black_player.username + ' vs. ' + match.white_player.username
 
     return render_template('view_match.html', title=title, match=match)

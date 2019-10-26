@@ -1,0 +1,8 @@
+  <table>
+    <tr valign="top">
+      <td><img src="{{ match.black_player.avatar(36) }}"></td>
+      <td><a href="{{ url_for('view_match', id=match.id) }}">{{ match.black_player.username }} vs. {{ match.white_player.username }}</a></td>
+      <td><img src="{{ match.white_player.avatar(36) }}"></td>
+    </tr>
+  </table>
+
