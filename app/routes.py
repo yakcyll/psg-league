@@ -5,8 +5,10 @@ from werkzeug.urls import url_parse
 from datetime import datetime
 
 from app import app, db
-from app.models import User
-from forms import LoginForm, RegistrationForm, EditProfileForm
+from app.models import User, Match
+from forms import LoginForm, RegistrationForm, EditProfileForm, AddMatchForm
+
+from vendor import sgf
 
 @app.route('/')
 @app.route('/index')
@@ -95,6 +97,37 @@ def edit_profile():
     elif request.method == 'GET':
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edytuj profil', form=form)
+
+@app.route('/add_match', methods=['GET', 'POST'])
+@login_required
+def add_match():
+    form = AddMatchForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            black_player = User.query.filter_by(username=form.black_player.data).first()
+            white_player = User.query.filter_by(username=form.white_player.data).first()
+            if black_player is None:
+                flash('W systemie nie zarejestrowano użytkownika o podanym imieniu czarnego gracza.')
+                return redirect(url_for('add_match'))
+            if white_player is None:
+                flash('W systemie nie zarejestrowano użytkownika o podanym imieniu białego gracza.')
+                return redirect(url_for('add_match'))
+
+            sgf_data = None
+            try:
+                sgf_data = request.files.get('sgf_file').read().decode('utf-8')
+                collection = sgf.Collection(sgf.Parser())
+                collection.parser.parse(sgf_data)
+            except (UnicodeDecodeError, sgf.ParseException):
+                flash('Wgrany plik nie jest poprawnym plikiem SGF.')
+                return redirect(url_for('add_match'))
+
+            match = Match(black_player=black_player, white_player=white_player, sgf=sgf_data)
+            db.session.add(match)
+            db.session.commit()
+            flash('Twój mecz został zapisany.')
+            return redirect(url_for('add_match'))
+    return render_template('add_match.html', title='Dodaj mecz', form=form)
 
 @app.before_request
 def before_request():

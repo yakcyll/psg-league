@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Dodaj mecz</h1>
+  <form action="{{ url_for('add_match') }}" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    <p>
+      {{ form.black_player.label }}
+      {{ form.black_player() }}<br />
+      {% for errors in form.black_player.errors %}
+      <span style="color:red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.white_player.label }}
+      {{ form.white_player() }}<br />
+      {% for errors in form.white_player.errors %}
+      <span style="color:red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.sgf_file.label }}
+      {{ form.sgf_file }}
+    </p>
+    <p>{{ form.submit() }}</p>
+  </form>
+{% endblock %}
