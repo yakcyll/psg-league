@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block additionalhead %}
+  <script type="text/javascript" src="{{ url_for('static', filename='wgo.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='wgo.player.min.js') }}"></script>
+  <link type="text/css" href="{{ url_for('static', filename='css/wgo.player.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+  <h1>Mecz {{ match.black_player.username }} vs. {{ match.white_player.username }}</h1>
+
+  <p>
+    Gracz czarny: <a href="{{ url_for('user', id=match.black_player.id) }}">{{ match.black_player.username }}</a>
+  </p>
+
+  <p>
+    Gracz biały: <a href="{{ url_for('user', id=match.white_player.id) }}">{{ match.white_player.username }}</a>
+  </p>
+
+  <p>
+  Rezultat: <button id="spoilerButton">Spoiler!</button><label id="resultLabel" style="display:none;">{{ match.result }}</label>
+  </p>
+
+  <div data-wgo="{{ match.sgf.rstrip('\n\r') }}" style="width:700px; height:600px;">
+    Sorry, your browser doesn't support WGo.js. Download <a download="{{ match.black_player.username }}_vs_{{ match.white_player.username }}_{{ match.timestamp.strftime('%Y_%m_%d') }}.sgf" href="data:text/x-go-sgf,{{ match.sgf }}">the SGF file</a> directly.
+  </div>
+
+  <script type="text/javascript">
+    document.getElementById("spoilerButton").addEventListener("click", function() {
+      document.getElementById("spoilerButton").style.display = "none";
+      document.getElementById("resultLabel").style.display = "initial";
+    });
+  </script>
+{% endblock %}

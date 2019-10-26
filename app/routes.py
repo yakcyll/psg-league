@@ -75,10 +75,10 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/user/<username>')
+@app.route('/user/<id>')
 @login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+def user(id):
+    user = User.query.filter_by(id=id).first_or_404()
     posts = [
         {'author': user, 'body': 'Test post #1'},
         {'author': user, 'body': 'Test post #2'},
@@ -128,6 +128,14 @@ def add_match():
             flash('Twój mecz został zapisany.')
             return redirect(url_for('add_match'))
     return render_template('add_match.html', title='Dodaj mecz', form=form)
+
+@app.route('/match/<id>')
+def view_match(id):
+    match = Match.query.filter_by(id=id).first_or_404()
+    print(match)
+    title = 'Mecz ' + match.black_player.username + ' vs. ' + match.white_player.username
+
+    return render_template('view_match.html', title=title, match=match)
 
 @app.before_request
 def before_request():

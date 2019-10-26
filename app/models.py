@@ -81,3 +81,5 @@ class Match(db.Model):
     result = db.Column(db.String(16))
     sgf = db.Column(db.String(65536))
 
+    def __repr__(self):
+        return '<Match {} vs. {}>'.format(self.black_player.username, self.white_player.username)
