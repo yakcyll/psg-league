@@ -2,6 +2,8 @@
 # https://github.com/jtauber/sgf
 # TODO: buy him a beer
 
+import io
+
 # map from numerical coordinates to letters used by SGF
 SGF_POS = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -148,6 +150,13 @@ class Node:
                 if "]" in value:
                     value = "\\]".join(value.split("]"))
                 f.write("[%s]" % value)
+
+    def __repr__(self):
+        ios = io.StringIO()
+        ios.write("<Node ")
+        self.output(ios)
+        ios.write(">")
+        return ios.getvalue()
 
 
 class NodeIterator:

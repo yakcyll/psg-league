@@ -114,15 +114,15 @@ def add_match():
                 return redirect(url_for('add_match'))
 
             sgf_data = None
+            collection = sgf.Collection(sgf.Parser())
             try:
                 sgf_data = request.files.get('sgf_file').read().decode('utf-8')
-                collection = sgf.Collection(sgf.Parser())
                 collection.parser.parse(sgf_data)
             except (UnicodeDecodeError, sgf.ParseException):
                 flash('Wgrany plik nie jest poprawnym plikiem SGF.')
                 return redirect(url_for('add_match'))
 
-            match = Match(black_player=black_player, white_player=white_player, sgf=sgf_data)
+            match = Match(black_player=black_player, white_player=white_player, sgf=sgf_data, result=collection[0].nodes[0].properties['RE'][0])
             db.session.add(match)
             db.session.commit()
             flash('Twój mecz został zapisany.')
