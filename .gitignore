@@ -2,6 +2,7 @@
 sensitive_config.py
 *.pyc
 */*/__pycache__
+logs
 
 # TODO: remove
 migrations/

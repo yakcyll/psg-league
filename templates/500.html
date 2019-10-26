@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #wrapper {
+            min-height: 100%; 
+        }
+        
+        #shrug {
+            margin: 0 auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        #errors {
+          margin: 0 auto;
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-105%);
+        }
+
+        h5, h6 {
+          margin: 5% 0;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="shrug">
+        <h1>¯\_(ツ)_/¯</h1>
+      </div>
+    </div>
+    <div id="errors">
+      <h5>An unexpected error has occurred.</h5>
+      <h6>The admins are watching you. <a href="{{url_for('index')}}">Run.</a></h6>
+  </body>
+</html>
