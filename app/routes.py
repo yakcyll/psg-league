@@ -78,12 +78,16 @@ def logout():
 @app.route('/user/<id>')
 @login_required
 def user(id):
-    user = User.query.filter_by(id=id).first_or_404()
+    if id.isdigit():
+        user = User.query.filter_by(id=id).first_or_404()
+    else:
+        user = User.query.filter_by(username=id).first_or_404()
+
     posts = [
         {'author': user, 'body': 'Test post #1'},
         {'author': user, 'body': 'Test post #2'},
     ]
-    matches = Match.query.filter_by(black_player_id=id).union(Match.query.filter_by(white_player_id=id)).all()
+    matches = Match.query.filter_by(black_player_id=user.id).union(Match.query.filter_by(white_player_id=user.id)).all()
     return render_template('user.html', user=user, posts=posts, matches=matches)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
