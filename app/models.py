@@ -4,10 +4,6 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-groupadmins = db.Table('groupadmins',
-    db.Column('group_id', db.Integer, db.ForeignKey('playing_group.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
-)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,12 +18,9 @@ class User(UserMixin, db.Model):
         'Match',
         primaryjoin='or_(Match.black_player_id == User.id, Match.white_player_id == User.id)',
         lazy='dynamic')
-    admin_of_groups = db.relationship(
-        'PlayingGroup',
-        secondary=groupadmins,
-        primaryjoin=(groupadmins.c.user_id == id),
-        backref=db.backref('groupadmins', lazy='dynamic'),
-        lazy='dynamic')
+    # TODO: proper permissions
+    is_admin = db.Column(db.Boolean, default=False)
+    is_league_manager = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -42,9 +35,11 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,21 +50,18 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
+
 class PlayingGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128))
-    level = db.Column(db.Integer)
+    name = db.Column(db.String(128), unique=True)
+    level = db.Column(db.Integer, unique=True, autoincrement=True)
     notes = db.Column(db.String(640))
-    admins = db.relationship(
-        'User',
-        secondary=groupadmins,
-        primaryjoin=(groupadmins.c.group_id == id),
-        backref=db.backref('groupadmins', lazy='dynamic'),
-        lazy='dynamic')
+    hidden = db.Column(db.Boolean, default=False)
     players = db.relationship('User', backref='group', lazy='dynamic')
 
     def __repr__(self):
         return '<Playing group {}, level {}>'.format(self.name, self.level)
+
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)

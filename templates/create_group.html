@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Utwórz grupę ligową</h1>
+  <form action="{{ url_for('create_group') }}" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.name.label }}
+      {{ form.name() }}<br />
+      {% for errors in form.name.errors %}
+      <span style="color:red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.notes.label }}
+      {{ form.notes() }}<br />
+      {% for errors in form.notes.errors %}
+      <span style="color:red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.hidden.label }}
+      {{ form.hidden() }}<br />
+      {% for errors in form.hidden.errors %}
+      <span style="color:red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+  </form>
+{% endblock %}
+
