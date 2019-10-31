@@ -54,9 +54,9 @@ class Post(db.Model):
 class PlayingGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
-    level = db.Column(db.Integer, unique=True, autoincrement=True)
+    level = db.Column(db.Integer, autoincrement=True)
     notes = db.Column(db.String(640))
-    hidden = db.Column(db.Boolean, default=False)
+    is_hidden = db.Column(db.Boolean, default=False)
     players = db.relationship('User', backref='group', lazy='dynamic')
 
     def __repr__(self):
